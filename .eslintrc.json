@@ -22,6 +22,8 @@
     "airbnb-base",
     "prettier"
   ],
+  "plugins": [ "babel" ],
+  "parser": "babel-eslint",
   "rules": {
     "import/extensions": "off",
     "linebreak-style": "off",
