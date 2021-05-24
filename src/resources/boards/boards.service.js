@@ -1,5 +1,5 @@
 import { BoardRepository } from './board.memory.repository.js';
-import { ErrorHandler } from '../../middlewares/error.js';
+import { CustomError } from '../../middlewares/error.js';
 import { TasksService } from '../tasks/tasks.service.js';
 
 export class BoardsService {
@@ -19,7 +19,7 @@ export class BoardsService {
   async getById(id) {
     const board = await this.boardRepository.getById(id);
     if (!board) {
-      throw new ErrorHandler(404, `Board with id ${id} not found`);
+      throw new CustomError(404, `Board with id ${id} not found`);
     }
     return board;
   }

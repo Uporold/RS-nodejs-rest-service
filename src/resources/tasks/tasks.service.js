@@ -1,5 +1,5 @@
 import { TaskRepository } from './task.memory.repository.js';
-import { ErrorHandler } from '../../middlewares/error.js';
+import { CustomError } from '../../middlewares/error.js';
 
 export class TasksService {
   constructor() {
@@ -17,7 +17,7 @@ export class TasksService {
   async getById(id, boardId) {
     const task = await this.taskRepository.getById(id, boardId);
     if (!task) {
-      throw new ErrorHandler(
+      throw new CustomError(
         404,
         `Task with id ${id} not found in board with id ${boardId}`
       );

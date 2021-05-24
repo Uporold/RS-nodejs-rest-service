@@ -1,5 +1,5 @@
 import { UserRepository } from './user.memory.repository.js';
-import { ErrorHandler } from '../../middlewares/error.js';
+import { CustomError } from '../../middlewares/error.js';
 import { TasksService } from '../tasks/tasks.service.js';
 
 export class UsersService {
@@ -19,7 +19,7 @@ export class UsersService {
   async getById(id) {
     const user = await this.userRepository.getById(id);
     if (!user) {
-      throw new ErrorHandler(404, `User with id ${id} not found`);
+      throw new CustomError(404, `User with id ${id} not found`);
     }
     return user;
   }
