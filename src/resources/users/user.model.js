@@ -1,6 +1,16 @@
 import { v4 as uuid } from 'uuid';
 
+/**
+ * Class representing a user
+ */
 export class User {
+  /**
+   *
+   * @param {string} id - user id
+   * @param {string} name - user name
+   * @param {string} login - user login
+   * @param {string} password - user password
+   */
   constructor({
     id = uuid(),
     name = 'USER',
