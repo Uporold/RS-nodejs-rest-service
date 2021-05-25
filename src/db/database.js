@@ -52,7 +52,7 @@ class Database {
   }
 
   /**
-   * Update transferred user
+   * Update user
    * @param {User} user - user data transfer object
    * @returns {Promise<void>}
    */
@@ -102,7 +102,7 @@ class Database {
   }
 
   /**
-   * Update transferred board
+   * Update board
    * @param {Board} board - board data transfer object
    * @returns {Promise<void>}
    */
@@ -176,7 +176,7 @@ class Database {
   }
 
   /**
-   * Update transferred task
+   * Update task
    * @param {Task} task - task data transfer object
    * @returns {Promise<void>}
    */
