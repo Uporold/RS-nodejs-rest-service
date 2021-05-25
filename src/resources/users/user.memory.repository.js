@@ -16,11 +16,12 @@ export class UserRepository extends Repository {
 
   /**
    * Create new user
-   * @param {User} user - user data transfer object
-   * @returns {Promise<User>} - added user
+   * @param {UserDto} user - user data transfer object
+   * @returns {Promise<User>} - created user
    */
   async create(user) {
-    return this.db.addUser(new User(user));
+    const newUser = new User(user);
+    return this.db.addUser(newUser);
   }
 
   /**
@@ -34,7 +35,7 @@ export class UserRepository extends Repository {
 
   /**
    * Update user
-   * @param {User} user - user data transfer object
+   * @param {User} user - updated user
    * @returns {Promise<void>}
    */
   async update(user) {

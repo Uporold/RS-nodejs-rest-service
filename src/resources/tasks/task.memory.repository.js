@@ -17,11 +17,12 @@ export class TaskRepository extends Repository {
 
   /**
    * Create new task
-   * @param task - task data transfer object
-   * @returns {Promise<Task>} - added task
+   * @param {TaskDto} task - task data transfer object
+   * @returns {Promise<Task>} - created task
    */
   async create(task) {
-    return this.db.addTask(new Task(task));
+    const newTask = new Task(task);
+    return this.db.addTask(newTask);
   }
 
   /**
@@ -36,7 +37,7 @@ export class TaskRepository extends Repository {
 
   /**
    * Update task
-   * @param {Task} task - task data transfer object
+   * @param {Task} task - updated task
    * @returns {Promise<void>}
    */
   async update(task) {

@@ -16,11 +16,12 @@ export class BoardRepository extends Repository {
 
   /**
    * Create new board
-   * @param {Board} board - board data transfer object
-   * @returns {Promise<Board>} - added board
+   * @param {BoardDto} board - board data transfer object
+   * @returns {Promise<Board>} - created board
    */
   async create(board) {
-    return this.db.addBoard(new Board(board));
+    const newBoard = new Board(board);
+    return this.db.addBoard(newBoard);
   }
 
   /**
@@ -34,7 +35,7 @@ export class BoardRepository extends Repository {
 
   /**
    * Update board
-   * @param {Board} board - board data transfer object
+   * @param {Board} board - updated board
    * @returns {Promise<void>}
    */
   async update(board) {

@@ -34,7 +34,7 @@ class Database {
 
   /**
    * Add transferred user to in-memory-database
-   * @param {User} user - user data transfer object
+   * @param {User} user - added user
    * @returns {Promise<User>} - added user
    */
   async addUser(user) {
@@ -53,7 +53,7 @@ class Database {
 
   /**
    * Update user
-   * @param {User} user - user data transfer object
+   * @param {User} user - updated user
    * @returns {Promise<void>}
    */
   async updateUser(user) {
@@ -84,7 +84,7 @@ class Database {
 
   /**
    * Add transferred board to in-memory-database
-   * @param {Board} board - board data transfer object
+   * @param {Board} board - added board
    * @returns {Promise<Board>} - added board
    */
   async addBoard(board) {
@@ -103,7 +103,7 @@ class Database {
 
   /**
    * Update board
-   * @param {Board} board - board data transfer object
+   * @param {Board} board - updated board
    * @returns {Promise<void>}
    */
   async updateBoard(board) {
@@ -155,7 +155,7 @@ class Database {
 
   /**
    * Add task to in-memory-database
-   * @param {Task} task - task data transfer object
+   * @param {Task} task - added task
    * @returns {Promise<Task>} - added task
    */
   async addTask(task) {
@@ -177,7 +177,7 @@ class Database {
 
   /**
    * Update task
-   * @param {Task} task - task data transfer object
+   * @param {Task} task - updated task
    * @returns {Promise<void>}
    */
   async updateTask(task) {

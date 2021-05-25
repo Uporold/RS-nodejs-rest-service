@@ -9,7 +9,7 @@ export class Board {
    *
    * @param {string} id - board id
    * @param {string} title - board title
-   * @param {Column[]} columns - board columns
+   * @param {ColumnDto[]} columns - board columns
    */
   constructor({
     id = uuid(),
