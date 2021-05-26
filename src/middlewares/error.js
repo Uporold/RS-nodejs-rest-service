@@ -15,6 +15,11 @@ export class CustomError extends Error {
   }
 }
 
+/**
+ * Error middleware
+ * @param {CustomError} err - thrown custom error
+ * @param {Response} res - express response
+ */
 export const handleError = (err, res) => {
   const { statusCode, message } = err;
   res.status(statusCode).json({

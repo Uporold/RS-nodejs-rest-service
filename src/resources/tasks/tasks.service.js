@@ -20,12 +20,11 @@ export class TasksService {
 
   /**
    * Create new task on board
-   * @param {string} boardId - board id
    * @param {TaskDto} task - task data transfer object
    * @returns {Promise<Task>} - created task
    */
-  async create(boardId, task) {
-    return this.taskRepository.create({ ...task, boardId });
+  async create(task) {
+    return this.taskRepository.create(task);
   }
 
   /**
@@ -49,18 +48,16 @@ export class TasksService {
   /**
    * Update task
    * @param {string} id - task id
-   * @param {string} boardId - board id
    * @param {TaskDto} task - task data transfer object
    * @throws will throw an error if not found task with given id
    * @returns {Promise<Task>}
    */
-  async update(id, boardId, task) {
-    const updatedTask = await this.taskRepository.getById(id, boardId);
+  async update(id, task) {
+    const updatedTask = await this.getById(id, task.boardId);
     updatedTask.title = task.title;
     updatedTask.order = task.order;
     updatedTask.description = task.description;
     updatedTask.userId = task.userId;
-    updatedTask.boardId = boardId;
     updatedTask.columnId = task.columnId;
     await this.taskRepository.update(updatedTask);
     return updatedTask;

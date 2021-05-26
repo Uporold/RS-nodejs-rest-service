@@ -65,6 +65,16 @@ If you're using VSCode, you can get a better developer experience from integrati
 npm run lint
 ```
 
+### Jsdoc
+
+To generate jsdoc tutorial:
+
+```
+npm run doc
+```
+
+Then open index.html by browser in /docs folder
+
 ### Debugging in VSCode
 
 Press <kbd>F5</kbd> to debug.

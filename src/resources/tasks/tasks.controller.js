@@ -22,8 +22,8 @@ export class TasksController {
   create = async (req, res, next) => {
     try {
       const { boardId } = req.params;
-      const taskDto = req.body;
-      const tasks = await this.tasksService.create(boardId, taskDto);
+      const taskDto = { ...req.body, boardId };
+      const tasks = await this.tasksService.create(taskDto);
       res.status(201).json(tasks);
     } catch (err) {
       next(err);
@@ -43,8 +43,8 @@ export class TasksController {
   update = async (req, res, next) => {
     try {
       const { id, boardId } = req.params;
-      const taskDto = req.body;
-      const task = await this.tasksService.update(id, boardId, taskDto);
+      const taskDto = { ...req.body, boardId};
+      const task = await this.tasksService.update(id, taskDto);
       res.status(200).json(task);
     } catch (err) {
       next(err);

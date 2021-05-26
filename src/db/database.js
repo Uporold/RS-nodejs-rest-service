@@ -26,7 +26,7 @@ class Database {
   // User
   /**
    * Show all users from in-memory-database
-   * @returns {Promise<User[]>} Array of users
+   * @returns {Promise<User[]>} - Array of users
    */
   async getUsers() {
     return this._users;

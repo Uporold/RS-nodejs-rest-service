@@ -31,7 +31,7 @@ export class BoardsService {
   /**
    * Get board by id
    * @param {string} id - board id
-   * @throws will throw an error if board is undefined
+   * @throws {CustomError} - will throw an error if board is undefined
    * @returns {Promise<Board>} - found board
    */
   async getById(id) {
@@ -46,7 +46,7 @@ export class BoardsService {
    * Update board
    * @param {string} id - board id
    * @param {BoardDto} board - board data transfer object
-   * @throws will throw an error if not found board with given id
+   * @throws {CustomError} - will throw an error if not found board with given id
    * @returns {Promise<Board>} - updated board
    */
   async update(id, board) {
@@ -60,7 +60,7 @@ export class BoardsService {
   /**
    *
    * @param {string} id - board id
-   * @throws will throw an error if not found board with given id
+   * @throws {CustomError} - will throw an error if not found board with given id
    * @returns {Promise<void>}
    */
   async deleteBoard(id) {

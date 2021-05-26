@@ -31,7 +31,7 @@ export class UsersService {
   /**
    * Get user by id
    * @param {string} id - user id
-   * @throws will throw an error if not found user with given id
+   * @throws {CustomError} - will throw an error if not found user with given id
    * @returns {Promise<User>} - found user
    */
   async getById(id) {
@@ -46,7 +46,7 @@ export class UsersService {
    * Update user
    * @param {string} id
    * @param {UserDto} user
-   * @throws will throw an error if not found user with given id
+   * @throws {CustomError} - will throw an error if not found user with given id
    * @returns {Promise<User>} - updated user
    */
   async update(id, user) {
@@ -61,7 +61,7 @@ export class UsersService {
   /**
    * Delete user
    * @param {string} id - user id
-   * @throws will throw an error if not found user with given id
+   * @throws {CustomError} - will throw an error if not found user with given id
    * @returns {Promise<void>}
    */
   async deleteUser(id) {
