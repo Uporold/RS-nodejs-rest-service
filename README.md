@@ -27,6 +27,16 @@ After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
 For more information about OpenAPI/Swagger please visit https://swagger.io/.
 
+### Jsdoc
+
+To generate jsdoc tutorial:
+
+```
+npm run doc
+```
+
+Then open index.html by browser in /docs folder
+
 ## Testing
 
 After application running open new terminal and enter:
@@ -64,16 +74,6 @@ If you're using VSCode, you can get a better developer experience from integrati
 ```
 npm run lint
 ```
-
-### Jsdoc
-
-To generate jsdoc tutorial:
-
-```
-npm run doc
-```
-
-Then open index.html by browser in /docs folder
 
 ### Debugging in VSCode
 
