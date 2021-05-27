@@ -1,20 +1,23 @@
-import express from 'express';
-import path, { dirname } from 'path';
-import { fileURLToPath } from 'url';
+import express, { Request, Response, NextFunction, Application } from 'express';
+import path from 'path';
 import YAML from 'yamljs';
 import * as swaggerUI from 'swagger-ui-express';
-import { config } from './common/config.js';
-import { UsersController } from './resources/users/users.controller.js';
-import { BoardsController } from './resources/boards/boards.controller.js';
-import { TasksController } from './resources/tasks/tasks.controller.js';
-import { handleError } from './middlewares/error.js';
+import { config } from './common/config';
+import { UsersController } from './resources/users/users.controller';
+import { BoardsController } from './resources/boards/boards.controller';
+import { TasksController } from './resources/tasks/tasks.controller';
+import { CustomError, handleError } from './middlewares/error';
 
 class Server {
+  private app: Application;
+  private usersController: UsersController;
+  private boardsController: BoardsController;
+  private tasksController: TasksController;
+  private readonly swaggerDocument: swaggerUI.JsonObject;
+
   constructor() {
     this.app = express();
-    this.swaggerDocument = YAML.load(
-      path.join(dirname(fileURLToPath(import.meta.url)), '../doc/api.yaml')
-    );
+    this.swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
     this.usersController = new UsersController();
     this.boardsController = new BoardsController();
     this.tasksController = new TasksController();
@@ -30,7 +33,7 @@ class Server {
       swaggerUI.setup(this.swaggerDocument)
     );
 
-    this.app.use('/', (req, res, next) => {
+    this.app.use('/', (req: Request, res: Response, next: NextFunction) => {
       if (req.originalUrl === '/') {
         res.send('Service is running!');
         return;
@@ -42,10 +45,12 @@ class Server {
     this.app.use('/boards', this.boardsController.router);
     this.app.use('/boards/:boardId/tasks', this.tasksController.router);
 
-    this.app.use((err, req, res, next) => {
-      handleError(err, res);
-      next();
-    });
+    this.app.use(
+      (err: CustomError, _req: Request, res: Response, next: NextFunction) => {
+        handleError(err, res);
+        next();
+      }
+    );
   }
 
   start() {
