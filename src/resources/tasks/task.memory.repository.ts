@@ -1,13 +1,13 @@
 import { Repository } from '../../common/repository';
 import { Task } from './task.model';
-import { TaskDto } from './task.dto';
+import { TaskWithBoardDto } from './task.dto';
 
 export class TaskRepository extends Repository {
   async getAll(boardId: string): Promise<Task[]> {
     return this.db.getTasks(boardId);
   }
 
-  async create(task: TaskDto): Promise<Task> {
+  async create(task: TaskWithBoardDto): Promise<Task> {
     const newTask = new Task(task);
     return this.db.addTask(newTask);
   }

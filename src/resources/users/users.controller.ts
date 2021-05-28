@@ -45,7 +45,7 @@ export class UsersController {
     next: NextFunction
   ): Promise<void> => {
     const { id } = req.params;
-    const userDto = req.body;
+    const userDto: UserDto = req.body;
     try {
       const user = await this.userService.update(String(id), userDto);
       res.status(200).json(User.toResponse(user));

@@ -1,6 +1,7 @@
 import { Router, Response, Request, NextFunction } from 'express';
 import { TasksService } from './tasks.service';
 import { Message } from '../../common/const';
+import { TaskDto } from './task.dto';
 
 export class TasksController {
   private tasksService: TasksService;
@@ -33,7 +34,7 @@ export class TasksController {
   ): Promise<void> => {
     try {
       const { boardId } = req.params;
-      const taskDto = req.body;
+      const taskDto: TaskDto = req.body;
       const tasks = await this.tasksService.create(String(boardId), taskDto);
       res.status(201).json(tasks);
     } catch (err) {
@@ -62,7 +63,7 @@ export class TasksController {
   ): Promise<void> => {
     try {
       const { id, boardId } = req.params;
-      const taskDto = req.body;
+      const taskDto: TaskDto = req.body;
       const task = await this.tasksService.update(
         String(id),
         String(boardId),

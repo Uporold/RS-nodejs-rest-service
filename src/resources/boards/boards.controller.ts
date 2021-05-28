@@ -1,15 +1,12 @@
 import { Router, Response, Request, NextFunction } from 'express';
 import { BoardsService } from './boards.service';
 import { Message } from '../../common/const';
-
-// const router = Router();
-// router.route('/').get(async (req, res, next) => {
-//
-// })
+import { BoardDto } from './board.dto';
 
 export class BoardsController {
   private boardsService: BoardsService;
   public router: Router;
+
   constructor() {
     this.boardsService = new BoardsService();
     this.router = Router();
@@ -22,7 +19,7 @@ export class BoardsController {
   };
 
   create = async (req: Request, res: Response): Promise<void> => {
-    const boardDto = req.body;
+    const boardDto: BoardDto = req.body;
     const board = await this.boardsService.create(boardDto);
     res.status(201).json(board);
   };
@@ -47,7 +44,7 @@ export class BoardsController {
     next: NextFunction
   ): Promise<void> => {
     const { id } = req.params;
-    const boardDto = req.body;
+    const boardDto: BoardDto = req.body;
     try {
       const board = await this.boardsService.update(String(id), boardDto);
       res.status(200).json(board);

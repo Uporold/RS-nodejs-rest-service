@@ -1,9 +1,6 @@
 import { v4 as uuid } from 'uuid';
-import { TaskDto } from './task.dto';
+import { TaskWithBoardDto } from './task.dto';
 
-/**
- * Class representing a Task
- */
 export class Task {
   public id: string;
   public title: string;
@@ -12,6 +9,7 @@ export class Task {
   public userId: string | null;
   public boardId: string;
   public columnId: string;
+
   constructor({
     title = 'task title',
     order = 0,
@@ -19,7 +17,7 @@ export class Task {
     userId = null,
     boardId = '1',
     columnId = '1',
-  }: TaskDto) {
+  }: TaskWithBoardDto) {
     this.id = uuid();
     this.title = title;
     this.order = order;

@@ -7,6 +7,7 @@ import { BoardDto } from './board.dto';
 export class BoardsService {
   private boardRepository: BoardRepository;
   private tasksService: TasksService;
+
   constructor() {
     this.boardRepository = new BoardRepository();
     this.tasksService = new TasksService();

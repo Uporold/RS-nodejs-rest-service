@@ -6,8 +6,8 @@ export class Column {
   public title: string;
   public order: number;
 
-  constructor({ title = 'column title', order = 0 }: ColumnDto) {
-    this.id = uuid();
+  constructor({ id = uuid(), title = 'column title', order = 0 }: ColumnDto) {
+    this.id = id;
     this.title = title;
     this.order = order;
   }
