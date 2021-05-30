@@ -17,10 +17,22 @@ git clone {repository URL}
 npm install
 ```
 
-## Running application
+## Running application in development mode
 
 ```
-npm start
+npm run start
+```
+
+## Running application in production mode
+
+```
+npm run start:prod
+```
+
+## Build application
+
+```
+npm run build
 ```
 
 After starting the app on port (4000 as default) you can open
