@@ -1,6 +1,6 @@
 import { database, Database } from '../db/database';
 
-export class Repository {
+export abstract class Repository {
   protected db: Database;
 
   constructor() {

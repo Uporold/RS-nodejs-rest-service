@@ -1,16 +1,15 @@
-import { Router, Response, Request, NextFunction } from 'express';
+import { Response, Request, NextFunction } from 'express';
 import { TasksService } from './tasks.service';
 import { Message } from '../../common/const';
-import { TaskDto } from './task.dto';
+import { Controller } from '../../common/controller';
 
-export class TasksController {
+export class TasksController extends Controller {
   private tasksService: TasksService;
-  public router: Router;
 
   constructor() {
+    super({ mergeParams: true });
     this.tasksService = new TasksService();
-    this.router = Router({ mergeParams: true });
-    this.routes();
+    super.routes();
   }
 
   getAll = async (
@@ -34,7 +33,7 @@ export class TasksController {
   ): Promise<void> => {
     try {
       const { boardId } = req.params;
-      const taskDto: TaskDto = req.body;
+      const taskDto = req.body;
       const tasks = await this.tasksService.create(String(boardId), taskDto);
       res.status(201).json(tasks);
     } catch (err) {
@@ -63,7 +62,7 @@ export class TasksController {
   ): Promise<void> => {
     try {
       const { id, boardId } = req.params;
-      const taskDto: TaskDto = req.body;
+      const taskDto = req.body;
       const task = await this.tasksService.update(
         String(id),
         String(boardId),
@@ -92,12 +91,4 @@ export class TasksController {
       next(err);
     }
   };
-
-  routes(): void {
-    this.router.get('/', this.getAll);
-    this.router.post('/', this.create);
-    this.router.get('/:id', this.getById);
-    this.router.put('/:id', this.update);
-    this.router.delete('/:id', this.delete);
-  }
 }

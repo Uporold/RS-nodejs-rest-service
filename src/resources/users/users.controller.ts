@@ -1,17 +1,17 @@
-import { Router, Response, Request, NextFunction } from 'express';
+import { Response, Request, NextFunction } from 'express';
 import { UsersService } from './users.service';
 import { User } from './user.model';
 import { Message } from '../../common/const';
 import { UserDto } from './user.dto';
+import { Controller } from '../../common/controller';
 
-export class UsersController {
+export class UsersController extends Controller {
   private userService: UsersService;
-  public router: Router;
 
   constructor() {
+    super();
     this.userService = new UsersService();
-    this.router = Router();
-    this.routes();
+    super.routes();
   }
 
   getAll = async (_req: Request, res: Response): Promise<void> => {
@@ -45,7 +45,7 @@ export class UsersController {
     next: NextFunction
   ): Promise<void> => {
     const { id } = req.params;
-    const userDto: UserDto = req.body;
+    const userDto = req.body;
     try {
       const user = await this.userService.update(String(id), userDto);
       res.status(200).json(User.toResponse(user));
@@ -71,12 +71,4 @@ export class UsersController {
       next(err);
     }
   };
-
-  routes(): void {
-    this.router.get('/', this.getAll);
-    this.router.post('/', this.create);
-    this.router.get('/:id', this.getById);
-    this.router.put('/:id', this.update);
-    this.router.delete('/:id', this.delete);
-  }
 }
