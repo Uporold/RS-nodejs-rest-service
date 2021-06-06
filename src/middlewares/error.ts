@@ -1,4 +1,5 @@
 import { NextFunction, Response, Request } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import { logger } from '../common/logger';
 
 export class CustomError extends Error {
@@ -27,7 +28,7 @@ export const handleError = (
     });
   } else {
     logger.error(`Status code: 500. Internal Server Error.`, err);
-    res.status(500).json({
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       status: 'Internal Server Error',
       message: err.message,
     });

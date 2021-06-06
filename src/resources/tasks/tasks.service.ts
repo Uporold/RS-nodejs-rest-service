@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import { TaskRepository } from './task.memory.repository';
 import { CustomError } from '../../middlewares/error';
 import { Task } from './task.model';
@@ -21,7 +22,7 @@ export class TasksService {
     const task = await this.taskRepository.getById(id, boardId);
     if (!task) {
       throw new CustomError(
-        404,
+        StatusCodes.NOT_FOUND,
         `Task with id ${id} not found in board with id ${boardId}`
       );
     }
