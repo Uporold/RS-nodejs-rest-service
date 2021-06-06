@@ -30,12 +30,7 @@ export class TasksService {
 
   async update(id: string, boardId: string, task: TaskDto): Promise<Task> {
     const updatedTask = await this.getById(id, boardId);
-    updatedTask.title = task.title;
-    updatedTask.order = task.order;
-    updatedTask.description = task.description;
-    updatedTask.userId = task.userId;
-    updatedTask.boardId = boardId;
-    updatedTask.columnId = task.columnId;
+    Object.assign(updatedTask, task);
     await this.taskRepository.update(updatedTask);
     return updatedTask;
   }

@@ -31,9 +31,7 @@ export class UsersService {
 
   async update(id: string, user: UserDto): Promise<User> {
     const updatedUser = await this.getById(id);
-    updatedUser.name = user.name;
-    updatedUser.login = user.login;
-    updatedUser.password = user.password;
+    Object.assign(updatedUser, user);
     await this.userRepository.update(updatedUser);
     return updatedUser;
   }

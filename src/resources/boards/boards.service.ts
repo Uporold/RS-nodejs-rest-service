@@ -31,8 +31,7 @@ export class BoardsService {
 
   async update(id: string, board: BoardDto): Promise<Board> {
     const updatedBoard = await this.getById(id);
-    updatedBoard.title = board.title;
-    updatedBoard.columns = board.columns;
+    Object.assign(updatedBoard, board);
     await this.boardRepository.update(updatedBoard);
     return updatedBoard;
   }
