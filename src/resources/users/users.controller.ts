@@ -1,4 +1,4 @@
-import { Response, Request, NextFunction } from 'express';
+import { Response, Request } from 'express';
 import { UsersService } from './users.service';
 import { User } from './user.model';
 import { Message } from '../../common/const';
@@ -25,50 +25,27 @@ export class UsersController extends Controller {
     res.status(201).json(User.toResponse(user));
   };
 
-  getById = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  getById = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
-    try {
-      const user = await this.userService.getById(String(id));
-      res.status(200).json(User.toResponse(user));
-    } catch (err) {
-      next(err);
-    }
+    const user = await this.userService.getById(String(id));
+    res.status(200).json(User.toResponse(user));
   };
 
-  update = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  update = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
     const userDto = req.body;
-    try {
-      const user = await this.userService.update(String(id), userDto);
-      res.status(200).json(User.toResponse(user));
-    } catch (err) {
-      next(err);
-    }
+
+    const user = await this.userService.update(String(id), userDto);
+    res.status(200).json(User.toResponse(user));
   };
 
-  delete = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  delete = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
-    try {
-      await this.userService.deleteUser(String(id));
-      res.status(200).json({
-        status: 'success',
-        statusCode: res.statusCode,
-        message: Message.USER.DELETED,
-      });
-    } catch (err) {
-      next(err);
-    }
+    await this.userService.deleteUser(String(id));
+    res.status(200).json({
+      status: 'success',
+      statusCode: res.statusCode,
+      message: Message.USER.DELETED,
+    });
   };
 }
