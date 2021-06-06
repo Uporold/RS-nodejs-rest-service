@@ -8,6 +8,7 @@ import { BoardsController } from './resources/boards/boards.controller';
 import { TasksController } from './resources/tasks/tasks.controller';
 import { handleError } from './middlewares/error';
 import { loggingMiddleware } from './middlewares/loggingMiddleware';
+import { logger } from './common/logger';
 
 class Server {
   private app: Application;
@@ -58,5 +59,16 @@ class Server {
   }
 }
 
+process.on('uncaughtException', (err: Error) => {
+  logger.error(`Uncaught exception ${err.name}:`, err);
+  setTimeout(() => {
+    process.exit(1);
+  }, 1000);
+});
+
 const server = new Server();
 server.start();
+
+process.on('unhandledRejection', (err: Error) => {
+  logger.error(`Unhandled rejection ${err.name}: ${err.message}`);
+});
