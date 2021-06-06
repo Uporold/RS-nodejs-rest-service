@@ -7,6 +7,7 @@ import { UsersController } from './resources/users/users.controller';
 import { BoardsController } from './resources/boards/boards.controller';
 import { TasksController } from './resources/tasks/tasks.controller';
 import { CustomError, handleError } from './middlewares/error';
+import { loggingMiddleware } from './middlewares/loggingMiddleware';
 
 class Server {
   private app: Application;
@@ -21,10 +22,10 @@ class Server {
     this.usersController = new UsersController();
     this.boardsController = new BoardsController();
     this.tasksController = new TasksController();
-    this.routes();
+    this.init();
   }
 
-  routes() {
+  private init() {
     this.app.use(express.json());
 
     this.app.use(
@@ -40,6 +41,8 @@ class Server {
       }
       next();
     });
+
+    this.app.use(loggingMiddleware);
 
     this.app.use('/users', this.usersController.router);
     this.app.use('/boards', this.boardsController.router);
