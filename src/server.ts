@@ -6,7 +6,7 @@ import { config } from './common/config';
 import { UsersController } from './resources/users/users.controller';
 import { BoardsController } from './resources/boards/boards.controller';
 import { TasksController } from './resources/tasks/tasks.controller';
-import { CustomError, handleError } from './middlewares/error';
+import { handleError } from './middlewares/error';
 import { loggingMiddleware } from './middlewares/loggingMiddleware';
 
 class Server {
@@ -48,12 +48,7 @@ class Server {
     this.app.use('/boards', this.boardsController.router);
     this.app.use('/boards/:boardId/tasks', this.tasksController.router);
 
-    this.app.use(
-      (err: CustomError, _req: Request, res: Response, next: NextFunction) => {
-        handleError(err, res);
-        next();
-      }
-    );
+    this.app.use(handleError);
   }
 
   start() {
