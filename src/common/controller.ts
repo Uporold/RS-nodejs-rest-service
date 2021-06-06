@@ -44,10 +44,11 @@ export abstract class Controller {
   ) => Promise<void>;
 
   public routes(): void {
-    this.router.get('/', this.getAll);
-    this.router.post('/', this.create);
-    this.router.get('/:id', this.getById);
-    this.router.put('/:id', this.update);
-    this.router.delete('/:id', this.delete);
+    this.router
+      .get('/', this.getAll)
+      .post('/', this.create)
+      .get('/:id', this.getById)
+      .put('/:id', this.update)
+      .delete('/:id', this.delete);
   }
 }
