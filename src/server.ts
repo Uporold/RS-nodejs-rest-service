@@ -71,4 +71,7 @@ server.start();
 
 process.on('unhandledRejection', (err: Error) => {
   logger.error(`Unhandled rejection ${err.name}: ${err.message}`);
+  setTimeout(() => {
+    process.exit(1);
+  }, 1000);
 });
