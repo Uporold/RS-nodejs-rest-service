@@ -1,4 +1,6 @@
-import { Response } from 'express';
+import { NextFunction, Response, Request } from 'express';
+import { StatusCodes } from 'http-status-codes';
+import { logger } from '../common/logger';
 
 export class CustomError extends Error {
   public statusCode: number;
@@ -11,11 +13,25 @@ export class CustomError extends Error {
   }
 }
 
-export const handleError = (err: CustomError, res: Response): void => {
-  const { statusCode, message } = err;
-  res.status(statusCode).json({
-    status: 'error',
-    statusCode,
-    message,
-  });
+export const handleError = (
+  err: Error,
+  _req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  if (err instanceof CustomError) {
+    logger.error(`Status code: ${err.statusCode}.`, err);
+    res.status(err.statusCode).json({
+      status: 'error',
+      statusCode: err.statusCode,
+      message: err.message,
+    });
+  } else {
+    logger.error(`Status code: 500. Internal Server Error.`, err);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      status: 'Internal Server Error',
+      message: err.message,
+    });
+  }
+  next();
 };

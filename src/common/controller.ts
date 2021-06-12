@@ -1,10 +1,11 @@
 import {
-  NextFunction,
-  Request,
-  Response,
   Router,
   RouterOptions,
+  Request,
+  Response,
+  NextFunction,
 } from 'express';
+import { routeWrapper } from './routeWrapper';
 
 export abstract class Controller {
   public router: Router;
@@ -44,10 +45,11 @@ export abstract class Controller {
   ) => Promise<void>;
 
   public routes(): void {
-    this.router.get('/', this.getAll);
-    this.router.post('/', this.create);
-    this.router.get('/:id', this.getById);
-    this.router.put('/:id', this.update);
-    this.router.delete('/:id', this.delete);
+    this.router
+      .get('/', routeWrapper(this.getAll))
+      .post('/', routeWrapper(this.create))
+      .get('/:id', routeWrapper(this.getById))
+      .put('/:id', routeWrapper(this.update))
+      .delete('/:id', routeWrapper(this.delete));
   }
 }

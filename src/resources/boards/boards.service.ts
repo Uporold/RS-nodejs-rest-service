@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import { BoardRepository } from './board.memory.repository';
 import { CustomError } from '../../middlewares/error';
 import { TasksService } from '../tasks/tasks.service';
@@ -24,15 +25,17 @@ export class BoardsService {
   async getById(id: string): Promise<Board> {
     const board = await this.boardRepository.getById(id);
     if (!board) {
-      throw new CustomError(404, `Board with id ${id} not found`);
+      throw new CustomError(
+        StatusCodes.NOT_FOUND,
+        `Board with id ${id} not found`
+      );
     }
     return board;
   }
 
   async update(id: string, board: BoardDto): Promise<Board> {
     const updatedBoard = await this.getById(id);
-    updatedBoard.title = board.title;
-    updatedBoard.columns = board.columns;
+    Object.assign(updatedBoard, board);
     await this.boardRepository.update(updatedBoard);
     return updatedBoard;
   }

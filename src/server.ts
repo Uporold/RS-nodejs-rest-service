@@ -6,7 +6,9 @@ import { config } from './common/config';
 import { UsersController } from './resources/users/users.controller';
 import { BoardsController } from './resources/boards/boards.controller';
 import { TasksController } from './resources/tasks/tasks.controller';
-import { CustomError, handleError } from './middlewares/error';
+import { handleError } from './middlewares/error';
+import { loggingMiddleware } from './middlewares/loggingMiddleware';
+import { logger } from './common/logger';
 
 class Server {
   private app: Application;
@@ -21,10 +23,10 @@ class Server {
     this.usersController = new UsersController();
     this.boardsController = new BoardsController();
     this.tasksController = new TasksController();
-    this.routes();
+    this.init();
   }
 
-  routes() {
+  private init() {
     this.app.use(express.json());
 
     this.app.use(
@@ -41,24 +43,35 @@ class Server {
       next();
     });
 
+    this.app.use(loggingMiddleware);
+
     this.app.use('/users', this.usersController.router);
     this.app.use('/boards', this.boardsController.router);
     this.app.use('/boards/:boardId/tasks', this.tasksController.router);
 
-    this.app.use(
-      (err: CustomError, _req: Request, res: Response, next: NextFunction) => {
-        handleError(err, res);
-        next();
-      }
-    );
+    this.app.use(handleError);
   }
 
   start() {
     this.app.listen(config.PORT, () =>
-      console.log(`App is running on http://localhost:${config.PORT}`)
+      logger.debug(`App is running on http://localhost:${config.PORT}`)
     );
   }
 }
 
+process.on('uncaughtException', (err: Error) => {
+  logger.error(`Uncaught exception ${err.name}:`, err);
+  setTimeout(() => {
+    process.exit(1);
+  }, 1000);
+});
+
 const server = new Server();
 server.start();
+
+process.on('unhandledRejection', (err: Error) => {
+  logger.error(`Unhandled rejection ${err.name}: ${err.message}`);
+  setTimeout(() => {
+    process.exit(1);
+  }, 1000);
+});

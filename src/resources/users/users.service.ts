@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import { UserRepository } from './user.memory.repository';
 import { CustomError } from '../../middlewares/error';
 import { TasksService } from '../tasks/tasks.service';
@@ -24,16 +25,17 @@ export class UsersService {
   async getById(id: string): Promise<User> {
     const user = await this.userRepository.getById(id);
     if (!user) {
-      throw new CustomError(404, `User with id ${id} not found`);
+      throw new CustomError(
+        StatusCodes.NOT_FOUND,
+        `User with id ${id} not found`
+      );
     }
     return user;
   }
 
   async update(id: string, user: UserDto): Promise<User> {
     const updatedUser = await this.getById(id);
-    updatedUser.name = user.name;
-    updatedUser.login = user.login;
-    updatedUser.password = user.password;
+    Object.assign(updatedUser, user);
     await this.userRepository.update(updatedUser);
     return updatedUser;
   }
