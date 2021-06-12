@@ -75,8 +75,7 @@ export class Database {
   }
 
   async getTasks(boardId: string): Promise<Task[]> {
-    this._tasks = this._tasks.filter((task) => task.boardId === boardId);
-    return this._tasks;
+    return this._tasks.filter((task) => task.boardId === boardId);
   }
 
   async addTask(task: Task): Promise<Task> {
