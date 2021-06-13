@@ -2,7 +2,7 @@ version: '3.8'
 services:
   node:
     container_name: 'node'
-    image: 'uporold/rs-school:node'
+    image: 'uporold/rs-node:latest'
     build: .
     depends_on:
       - postgres
@@ -18,18 +18,18 @@ services:
       - user-defined
   postgres:
     container_name: 'postgres'
-    image: 'uporold/rs-school:postgres'
+    image: 'uporold/rs-postgres:latest'
     build: ./db-dockerfile/
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    volumes:
+      - ./postgresdata:/var/lib/postgresql/data
     restart: always
     environment:
       PORT: ${PORT}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
-    volumes:
-      - ./postgresdata:/var/lib/postgresql/data
     networks:
       - user-defined
 

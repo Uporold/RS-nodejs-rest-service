@@ -1,1 +1,1 @@
-FROM uporold/rs-school:node
+FROM uporold/rs-node:latest

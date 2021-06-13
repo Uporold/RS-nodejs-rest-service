@@ -1,1 +1,1 @@
-FROM uporold/rs-school:postgres
+FROM uporold/rs-postgres:latest
