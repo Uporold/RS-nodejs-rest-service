@@ -3,7 +3,7 @@ import { BoardEntity } from '../boards/board.entity';
 import { ColumnEntity } from '../boards/column.entity';
 import { UserEntity } from '../users/user.entity';
 
-@Entity('task')
+@Entity('tasks')
 export class TaskEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
