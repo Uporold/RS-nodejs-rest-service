@@ -17,6 +17,21 @@ git clone {repository URL}
 npm install
 ```
 
+## Docker run
+
+```
+docker-compose up
+```
+
+Or use your IDE gui
+
+## Docker repos
+
+[Fixed postgres+alpine](https://registry.hub.docker.com/r/uporold/rs-postgres)
+
+[Node + alpine](https://registry.hub.docker.com/r/uporold/rs-node)
+
+
 ## Running application in development mode
 
 ```
