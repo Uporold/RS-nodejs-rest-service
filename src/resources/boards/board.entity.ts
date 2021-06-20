@@ -9,7 +9,7 @@ import {
 import { ColumnEntity } from './column.entity';
 import { TaskEntity } from '../tasks/task.entity';
 
-@Entity('boards')
+@Entity('board')
 export class BoardEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
