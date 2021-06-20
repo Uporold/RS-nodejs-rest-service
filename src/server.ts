@@ -1,4 +1,5 @@
 import express, { Request, Response, NextFunction, Application } from 'express';
+import 'reflect-metadata';
 import path from 'path';
 import YAML from 'yamljs';
 import * as swaggerUI from 'swagger-ui-express';
@@ -9,12 +10,13 @@ import { TasksController } from './resources/tasks/tasks.controller';
 import { handleError } from './middlewares/error';
 import { loggingMiddleware } from './middlewares/loggingMiddleware';
 import { logger } from './common/logger';
+import { connect } from './common/db-connect';
 
 class Server {
   private app: Application;
-  private usersController: UsersController;
-  private boardsController: BoardsController;
-  private tasksController: TasksController;
+  private usersController!: UsersController;
+  private boardsController!: BoardsController;
+  private tasksController!: TasksController;
   private readonly swaggerDocument: swaggerUI.JsonObject;
 
   constructor() {
@@ -66,8 +68,10 @@ process.on('uncaughtException', (err: Error) => {
   }, 1000);
 });
 
-const server = new Server();
-server.start();
+connect().then(() => {
+  const server = new Server();
+  server.start();
+});
 
 process.on('unhandledRejection', (err: Error) => {
   logger.error(`Unhandled rejection ${err.name}: ${err.message}`);

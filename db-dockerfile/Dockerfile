@@ -1,1 +1,2 @@
-FROM uporold/rs-postgres:latest
+FROM postgres:alpine
+RUN apk upgrade libxml2

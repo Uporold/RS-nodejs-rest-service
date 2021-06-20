@@ -6,6 +6,8 @@ services:
     build: .
     depends_on:
       - postgres
+    links:
+      - postgres
     ports:
       - ${PORT}:${PORT}
     volumes:
@@ -14,6 +16,7 @@ services:
     restart: always
     environment:
       PORT: ${PORT}
+      POSTGRES_HOST: postgres
     networks:
       - user-defined
   postgres:
