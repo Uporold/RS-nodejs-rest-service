@@ -1,1 +1,7 @@
-FROM uporold/rs-node:latest
+FROM node:14.17.0-alpine
+WORKDIR /usr/app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 4000
+CMD ["npm", "start"]

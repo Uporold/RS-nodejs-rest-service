@@ -1,7 +1,6 @@
 import { Response, Request } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { UsersService } from './users.service';
-import { User } from './user.model';
 import { Message } from '../../common/const';
 import { UserDto } from './user.dto';
 import { Controller } from '../../common/controller';
@@ -17,19 +16,19 @@ export class UsersController extends Controller {
 
   getAll = async (_req: Request, res: Response): Promise<void> => {
     const users = await this.userService.getAll();
-    res.status(StatusCodes.OK).json(users.map(User.toResponse));
+    res.status(StatusCodes.OK).json(users);
   };
 
   create = async (req: Request, res: Response): Promise<void> => {
     const userDto: UserDto = req.body;
     const user = await this.userService.create(userDto);
-    res.status(StatusCodes.CREATED).json(User.toResponse(user));
+    res.status(StatusCodes.CREATED).send(user.toJSON());
   };
 
   getById = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
     const user = await this.userService.getById(String(id));
-    res.status(StatusCodes.OK).json(User.toResponse(user));
+    res.status(StatusCodes.OK).json(user);
   };
 
   update = async (req: Request, res: Response): Promise<void> => {
@@ -37,7 +36,7 @@ export class UsersController extends Controller {
     const userDto = req.body;
 
     const user = await this.userService.update(String(id), userDto);
-    res.status(StatusCodes.OK).json(User.toResponse(user));
+    res.status(StatusCodes.OK).json(user);
   };
 
   delete = async (req: Request, res: Response): Promise<void> => {

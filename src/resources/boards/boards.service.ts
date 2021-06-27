@@ -1,29 +1,29 @@
 import { StatusCodes } from 'http-status-codes';
-import { BoardRepository } from './board.memory.repository';
+import { getConnection } from 'typeorm';
+import { BoardRepository } from './board.repository';
 import { CustomError } from '../../middlewares/error';
-import { TasksService } from '../tasks/tasks.service';
-import { Board } from './board.model';
 import { BoardDto } from './board.dto';
+import { BoardEntity } from './board.entity';
 
 export class BoardsService {
   private boardRepository: BoardRepository;
-  private tasksService: TasksService;
 
   constructor() {
-    this.boardRepository = new BoardRepository();
-    this.tasksService = new TasksService();
+    this.boardRepository = getConnection().getCustomRepository(BoardRepository);
   }
 
-  async getAll(): Promise<Board[]> {
-    return this.boardRepository.getAll();
+  async getAll(): Promise<BoardEntity[]> {
+    return this.boardRepository.find();
   }
 
-  async create(board: BoardDto): Promise<Board> {
-    return this.boardRepository.create(board);
+  async create(boardDto: BoardDto): Promise<BoardEntity> {
+    const board = this.boardRepository.create(boardDto);
+    await this.boardRepository.save(board);
+    return board;
   }
 
-  async getById(id: string): Promise<Board> {
-    const board = await this.boardRepository.getById(id);
+  async getById(id: string): Promise<BoardEntity> {
+    const board = await this.boardRepository.findOne(id);
     if (!board) {
       throw new CustomError(
         StatusCodes.NOT_FOUND,
@@ -33,16 +33,20 @@ export class BoardsService {
     return board;
   }
 
-  async update(id: string, board: BoardDto): Promise<Board> {
+  async update(id: string, board: BoardDto): Promise<BoardEntity> {
     const updatedBoard = await this.getById(id);
     Object.assign(updatedBoard, board);
-    await this.boardRepository.update(updatedBoard);
+    await this.boardRepository.save(updatedBoard);
     return updatedBoard;
   }
 
   async deleteBoard(id: string): Promise<void> {
-    await this.getById(id);
-    await this.boardRepository.deleteBoard(id);
-    await this.tasksService.removeByBoard(id);
+    const result = await this.boardRepository.delete(id);
+    if (result.affected === 0) {
+      throw new CustomError(
+        StatusCodes.NOT_FOUND,
+        `Board with id ${id} not found`
+      );
+    }
   }
 }

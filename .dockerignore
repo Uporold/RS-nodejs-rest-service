@@ -6,4 +6,4 @@ build
 db-dockerfile
 Dockerfile
 docker-compose.yml
-.env
+

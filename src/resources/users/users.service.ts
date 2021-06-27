@@ -1,29 +1,29 @@
 import { StatusCodes } from 'http-status-codes';
-import { UserRepository } from './user.memory.repository';
+import { getConnection } from 'typeorm';
+import { UserRepository } from './user.repository';
 import { CustomError } from '../../middlewares/error';
-import { TasksService } from '../tasks/tasks.service';
-import { User } from './user.model';
 import { UserDto } from './user.dto';
+import { UserEntity } from './user.entity';
 
 export class UsersService {
   private userRepository: UserRepository;
-  private tasksService: TasksService;
 
   constructor() {
-    this.userRepository = new UserRepository();
-    this.tasksService = new TasksService();
+    this.userRepository = getConnection().getCustomRepository(UserRepository);
   }
 
-  async getAll(): Promise<User[]> {
-    return this.userRepository.getAll();
+  async getAll(): Promise<UserEntity[]> {
+    return this.userRepository.find();
   }
 
-  async create(user: UserDto): Promise<User> {
-    return this.userRepository.create(user);
+  async create(userDto: UserDto): Promise<UserEntity> {
+    const user = this.userRepository.create(userDto);
+    await this.userRepository.save(user);
+    return user;
   }
 
-  async getById(id: string): Promise<User> {
-    const user = await this.userRepository.getById(id);
+  async getById(id: string): Promise<UserEntity> {
+    const user = await this.userRepository.findOne(id);
     if (!user) {
       throw new CustomError(
         StatusCodes.NOT_FOUND,
@@ -33,16 +33,20 @@ export class UsersService {
     return user;
   }
 
-  async update(id: string, user: UserDto): Promise<User> {
+  async update(id: string, userDto: UserDto): Promise<UserEntity> {
     const updatedUser = await this.getById(id);
-    Object.assign(updatedUser, user);
-    await this.userRepository.update(updatedUser);
+    Object.assign(updatedUser, userDto);
+    await this.userRepository.save(updatedUser);
     return updatedUser;
   }
 
   async deleteUser(id: string): Promise<void> {
-    await this.getById(id);
-    await this.userRepository.deleteUser(id);
-    await this.tasksService.unassignUserTasks(id);
+    const result = await this.userRepository.delete(id);
+    if (result.affected === 0) {
+      throw new CustomError(
+        StatusCodes.NOT_FOUND,
+        `User with id ${id} not found`
+      );
+    }
   }
 }

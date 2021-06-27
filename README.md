@@ -31,6 +31,15 @@ Or use your IDE gui
 
 [Node + alpine](https://registry.hub.docker.com/r/uporold/rs-node)
 
+## Migrations
+
+generate: ```npm run typeorm:cli -- migration:generate -n name```
+
+run: ```npm run typeorm:cli -- migration:run```
+
+revert: ```npm run typeorm:cli -- migration:revert```
+
+
 
 ## Running application in development mode
 
