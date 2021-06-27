@@ -51,9 +51,33 @@ export class UsersService {
   }
 
   async update(id: string, userDto: UserDto): Promise<UserEntity> {
+    const { login, name, password } = userDto;
     const updatedUser = await this.getById(id);
-    Object.assign(updatedUser, userDto);
-    await this.userRepository.save(updatedUser);
+    const hashedPassword = password
+      ? await bcrypt.hash(password, await bcrypt.genSalt())
+      : undefined;
+    Object.assign(
+      updatedUser,
+      hashedPassword
+        ? {
+            login,
+            name,
+            password: (await bcrypt.compare(password, updatedUser.password))
+              ? updatedUser.password
+              : hashedPassword,
+          }
+        : userDto
+    );
+    try {
+      await this.userRepository.save(updatedUser);
+    } catch (err) {
+      if (err.code === '23505') {
+        throw new CustomError(
+          StatusCodes.CONFLICT,
+          'User with this login already exists'
+        );
+      }
+    }
     return updatedUser;
   }
 
