@@ -7,6 +7,7 @@ import { config } from './common/config';
 import { UsersController } from './resources/users/users.controller';
 import { BoardsController } from './resources/boards/boards.controller';
 import { TasksController } from './resources/tasks/tasks.controller';
+import { AuthController } from './resources/auth/auth.controller';
 import { handleError } from './middlewares/error';
 import { loggingMiddleware } from './middlewares/loggingMiddleware';
 import { logger } from './common/logger';
@@ -14,9 +15,10 @@ import { connect } from './common/db-connect';
 
 class Server {
   private app: Application;
-  private usersController!: UsersController;
-  private boardsController!: BoardsController;
-  private tasksController!: TasksController;
+  private usersController: UsersController;
+  private boardsController: BoardsController;
+  private tasksController: TasksController;
+  private authController: AuthController;
   private readonly swaggerDocument: swaggerUI.JsonObject;
 
   constructor() {
@@ -25,6 +27,7 @@ class Server {
     this.usersController = new UsersController();
     this.boardsController = new BoardsController();
     this.tasksController = new TasksController();
+    this.authController = new AuthController();
     this.init();
   }
 
@@ -46,7 +49,7 @@ class Server {
     });
 
     this.app.use(loggingMiddleware);
-
+    this.app.use('/login', this.authController.router);
     this.app.use('/users', this.usersController.router);
     this.app.use('/boards', this.boardsController.router);
     this.app.use('/boards/:boardId/tasks', this.tasksController.router);
