@@ -12,6 +12,7 @@ import { handleError } from './middlewares/error';
 import { loggingMiddleware } from './middlewares/loggingMiddleware';
 import { logger } from './common/logger';
 import { connect } from './common/db-connect';
+import { authMiddleware } from './middlewares/authMiddleware';
 
 class Server {
   private app: Application;
@@ -50,6 +51,7 @@ class Server {
 
     this.app.use(loggingMiddleware);
     this.app.use('/login', this.authController.router);
+    this.app.use(authMiddleware);
     this.app.use('/users', this.usersController.router);
     this.app.use('/boards', this.boardsController.router);
     this.app.use('/boards/:boardId/tasks', this.tasksController.router);

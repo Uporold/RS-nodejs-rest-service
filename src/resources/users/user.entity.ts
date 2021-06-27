@@ -1,4 +1,5 @@
 import {
+  BaseEntity,
   Column,
   Entity,
   OneToMany,
@@ -10,7 +11,7 @@ import { TaskEntity } from '../tasks/task.entity';
 
 @Entity('users')
 @Unique(['login'])
-export class UserEntity {
+export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
