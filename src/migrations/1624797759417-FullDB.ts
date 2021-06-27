@@ -1,4 +1,5 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 export class FullDB1624797759417 implements MigrationInterface {
   name = 'FullDB1624797759417';
@@ -27,6 +28,12 @@ export class FullDB1624797759417 implements MigrationInterface {
     );
     await queryRunner.query(
       `ALTER TABLE "columns" ADD CONSTRAINT "FK_ac92bfd7ba33174aabef610f361" FOREIGN KEY ("boardId") REFERENCES "boards"("id") ON DELETE CASCADE ON UPDATE NO ACTION`
+    );
+    await queryRunner.query(
+      `INSERT INTO users (name, login, password) VALUES ('admin', 'admin', '${await bcrypt.hash(
+        'admin',
+        10
+      )}') ON CONFLICT (login) DO NOTHING;`
     );
   }
 
