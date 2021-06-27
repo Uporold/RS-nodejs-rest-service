@@ -21,7 +21,7 @@ export class AuthService {
     const user = await this.userRepository.findOne({ login });
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload = { userId: user.id, login };
-      const token = await jwt.sign(payload, config.JWT_SECRET_KEY);
+      const token = jwt.sign(payload, config.JWT_SECRET_KEY);
       return { token };
     }
     throw new CustomError(

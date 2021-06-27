@@ -9,7 +9,7 @@
   "main": "build/server.js",
   "scripts": {
     "build": "tsc",
-    "start": "nodemon -L --exitcrash src/server.ts",
+    "start": "nodemon -L src/server.ts",
     "start:prod": "node build/server",
     "lint": "eslint --ext .js,.ts --fix src/",
     "test": "cross-env DEBUG=rs:* jest --testMatch \"<rootDir>/test/e2e/test/*.test.js\" --noStackTrace --runInBand",

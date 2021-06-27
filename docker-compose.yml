@@ -23,8 +23,8 @@ services:
     build: ./db-dockerfile/
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
-    volumes:
-      - ./postgresdata:/var/lib/postgresql/data
+    #volumes:
+    #  - ./postgresdata:/var/lib/postgresql/data
     restart: always
     environment:
       PORT: ${PORT}
