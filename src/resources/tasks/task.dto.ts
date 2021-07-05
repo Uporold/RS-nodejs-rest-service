@@ -5,7 +5,3 @@ export interface TaskDto {
   userId: string | null;
   columnId: string;
 }
-
-export interface TaskWithBoardDto extends TaskDto {
-  boardId: string;
-}

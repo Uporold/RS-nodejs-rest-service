@@ -27,6 +27,14 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended"
   ],
+  "overrides": [
+    {
+      "files": ["src/**/*.entity.ts"],
+      "rules": {
+        "import/no-cycle": "off"
+      }
+    }
+  ],
   "rules": {
     "@typescript-eslint/lines-between-class-members": [
       "error",
@@ -34,7 +42,6 @@
       { "exceptAfterSingleLine": true }
     ],
     "import/extensions": "off",
-    "import/no-cycle": "off",
     "linebreak-style": "off",
     "node/no-unsupported-features/es-syntax": "off",
     "no-underscore-dangle": "off",

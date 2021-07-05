@@ -1,9 +1,17 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  Unique,
+} from 'typeorm';
 import { classToPlain, Exclude } from 'class-transformer';
 import { TaskEntity } from '../tasks/task.entity';
 
 @Entity('users')
-export class UserEntity {
+@Unique(['login'])
+export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
