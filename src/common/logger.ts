@@ -42,9 +42,19 @@ const transports = [
   new winston.transports.File({
     filename: 'logs/error.log',
     level: 'error',
-    format: winston.format.json(),
+    format: winston.format.splat(),
   }),
   new winston.transports.File({ filename: 'logs/all.log' }),
+];
+
+const transportOnlyConsole = [
+  new winston.transports.Console({
+    format: winston.format.combine(
+      winston.format.colorize({
+        all: true,
+      })
+    ),
+  }),
 ];
 
 export const logger = winston.createLogger({
@@ -52,4 +62,11 @@ export const logger = winston.createLogger({
   levels,
   format,
   transports,
+});
+
+export const processOnLogger = winston.createLogger({
+  level: 'error',
+  levels,
+  format,
+  transports: transportOnlyConsole,
 });

@@ -1,18 +1,20 @@
-import { StatusCodes } from 'http-status-codes';
-import { getConnection } from 'typeorm';
-import * as bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { UserRepository } from '../users/user.repository';
-import { CustomError } from '../../middlewares/error';
+import { InjectRepository } from '@nestjs/typeorm';
 import { AuthCredentialsDto } from './auth.dto';
-import { config } from '../../common/config';
+// import { InjectRepository } from '@nestjs/typeorm';
+// import { UserRepository } from '../users/user.repository';
+// import { AuthCredentialsDto } from './auth.dto';
+import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
+@Injectable()
 export class AuthService {
-  private userRepository: UserRepository;
-
-  constructor() {
-    this.userRepository = getConnection().getCustomRepository(UserRepository);
-  }
+  constructor(
+    @InjectRepository(UserRepository)
+    private userRepository: UserRepository,
+    private jwtService: JwtService
+  ) {}
 
   async login(
     authCredentialsDto: AuthCredentialsDto
@@ -21,14 +23,9 @@ export class AuthService {
     const user = await this.userRepository.findOne({ login });
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload = { userId: user.id, login };
-      const token = jwt.sign(payload, config.JWT_SECRET_KEY, {
-        expiresIn: 3600,
-      });
+      const token = await this.jwtService.signAsync(payload);
       return { token };
     }
-    throw new CustomError(
-      StatusCodes.FORBIDDEN,
-      'Check your login credentials'
-    );
+    throw new ForbiddenException('Check your login credentials');
   }
 }

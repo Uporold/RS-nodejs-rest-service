@@ -1,49 +1,48 @@
-import { Response, Request } from 'express';
-import { StatusCodes } from 'http-status-codes';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { BoardsService } from './boards.service';
-import { Message } from '../../common/const';
-import { Controller } from '../../common/controller';
+import { BoardEntity } from './board.entity';
+import { BoardDto } from './board.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth-guard';
 
-export class BoardsController extends Controller {
-  private boardsService: BoardsService;
+@Controller('boards')
+@UseGuards(JwtAuthGuard)
+export class BoardsController {
+  constructor(private boardsService: BoardsService) {}
 
-  constructor() {
-    super();
-    this.boardsService = new BoardsService();
-    super.routes();
+  @Get()
+  getBoards(): Promise<BoardEntity[]> {
+    return this.boardsService.getAll();
   }
 
-  getAll = async (_req: Request, res: Response): Promise<void> => {
-    const boards = await this.boardsService.getAll();
-    res.status(StatusCodes.OK).json(boards);
-  };
+  @Post()
+  createBoard(@Body() boardDto: BoardDto): Promise<BoardEntity> {
+    return this.boardsService.create(boardDto);
+  }
 
-  create = async (req: Request, res: Response): Promise<void> => {
-    const boardDto = req.body;
-    const board = await this.boardsService.create(boardDto);
-    res.status(StatusCodes.CREATED).json(board);
-  };
+  @Get('/:id')
+  getBoardById(@Param('id') id: string): Promise<BoardEntity> {
+    return this.boardsService.getById(id);
+  }
 
-  getById = async (req: Request, res: Response): Promise<void> => {
-    const { id } = req.params;
-    const board = await this.boardsService.getById(String(id));
-    res.status(StatusCodes.OK).json(board);
-  };
+  @Put('/:id')
+  updateBoard(
+    @Body() boardDto: BoardDto,
+    @Param('id') id: string
+  ): Promise<BoardEntity> {
+    return this.boardsService.update(id, boardDto);
+  }
 
-  update = async (req: Request, res: Response): Promise<void> => {
-    const { id } = req.params;
-    const boardDto = req.body;
-    const board = await this.boardsService.update(String(id), boardDto);
-    res.status(StatusCodes.OK).json(board);
-  };
-
-  delete = async (req: Request, res: Response): Promise<void> => {
-    const { id } = req.params;
-    await this.boardsService.deleteBoard(String(id));
-    res.status(StatusCodes.OK).json({
-      status: 'success',
-      statusCode: res.statusCode,
-      message: Message.BOARD.DELETED,
-    });
-  };
+  @Delete('/:id')
+  deleteBoard(@Param('id') id: string): Promise<void> {
+    return this.boardsService.delete(id);
+  }
 }

@@ -1,5 +1,4 @@
 import {
-  BaseEntity,
   Column,
   Entity,
   ManyToOne,
@@ -10,7 +9,7 @@ import { TaskEntity } from '../tasks/task.entity';
 import { BoardEntity } from './board.entity';
 
 @Entity('columns')
-export class ColumnEntity extends BaseEntity {
+export class ColumnEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 

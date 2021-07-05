@@ -1,5 +1,10 @@
-export interface UserDto {
-  name: string;
-  login: string;
-  password: string;
+import { IsNotEmpty } from 'class-validator';
+
+export class UserDto {
+  @IsNotEmpty()
+  name!: string;
+  @IsNotEmpty()
+  login!: string;
+  @IsNotEmpty()
+  password!: string;
 }

@@ -9,7 +9,9 @@ morgan.token('query', (req: Request) => {
 });
 
 morgan.token('body', (req: Request) => {
-  delete req.body.password;
+  if (req.body && req.body.password) {
+    delete req.body.password;
+  }
   return JSON.stringify({
     body: req.body,
   });

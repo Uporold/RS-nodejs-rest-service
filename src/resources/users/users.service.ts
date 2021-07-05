@@ -1,17 +1,20 @@
-import { StatusCodes } from 'http-status-codes';
-import { getConnection } from 'typeorm';
-import * as bcrypt from 'bcrypt';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
-import { CustomError } from '../../middlewares/error';
 import { UserDto } from './user.dto';
 import { UserEntity } from './user.entity';
+import * as bcrypt from 'bcrypt';
 
+@Injectable()
 export class UsersService {
-  private userRepository: UserRepository;
-
-  constructor() {
-    this.userRepository = getConnection().getCustomRepository(UserRepository);
-  }
+  constructor(
+    @InjectRepository(UserRepository)
+    private userRepository: UserRepository
+  ) {}
 
   async getAll(): Promise<UserEntity[]> {
     return this.userRepository.find();
@@ -30,10 +33,7 @@ export class UsersService {
       await this.userRepository.save(user);
     } catch (err) {
       if (err.code === '23505') {
-        throw new CustomError(
-          StatusCodes.CONFLICT,
-          'User with this login already exists'
-        );
+        throw new ConflictException('User with this login already exists');
       }
     }
     return user;
@@ -42,10 +42,7 @@ export class UsersService {
   async getById(id: string): Promise<UserEntity> {
     const user = await this.userRepository.findOne(id);
     if (!user) {
-      throw new CustomError(
-        StatusCodes.NOT_FOUND,
-        `User with id ${id} not found`
-      );
+      throw new NotFoundException(`User with id ${id} not found`);
     }
     return user;
   }
@@ -72,22 +69,16 @@ export class UsersService {
       await this.userRepository.save(updatedUser);
     } catch (err) {
       if (err.code === '23505') {
-        throw new CustomError(
-          StatusCodes.CONFLICT,
-          'User with this login already exists'
-        );
+        throw new ConflictException('User with this login already exists');
       }
     }
     return updatedUser;
   }
 
-  async deleteUser(id: string): Promise<void> {
+  async delete(id: string): Promise<void> {
     const result = await this.userRepository.delete(id);
     if (result.affected === 0) {
-      throw new CustomError(
-        StatusCodes.NOT_FOUND,
-        `User with id ${id} not found`
-      );
+      throw new NotFoundException(`User with id ${id} not found`);
     }
   }
 }

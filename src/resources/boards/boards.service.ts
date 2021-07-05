@@ -1,16 +1,15 @@
-import { StatusCodes } from 'http-status-codes';
-import { getConnection } from 'typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { BoardRepository } from './board.repository';
-import { CustomError } from '../../middlewares/error';
-import { BoardDto } from './board.dto';
 import { BoardEntity } from './board.entity';
+import { BoardDto } from './board.dto';
 
+@Injectable()
 export class BoardsService {
-  private boardRepository: BoardRepository;
-
-  constructor() {
-    this.boardRepository = getConnection().getCustomRepository(BoardRepository);
-  }
+  constructor(
+    @InjectRepository(BoardRepository)
+    private boardRepository: BoardRepository
+  ) {}
 
   async getAll(): Promise<BoardEntity[]> {
     return this.boardRepository.find();
@@ -25,10 +24,7 @@ export class BoardsService {
   async getById(id: string): Promise<BoardEntity> {
     const board = await this.boardRepository.findOne(id);
     if (!board) {
-      throw new CustomError(
-        StatusCodes.NOT_FOUND,
-        `Board with id ${id} not found`
-      );
+      throw new NotFoundException(`Board with id ${id} not found`);
     }
     return board;
   }
@@ -40,13 +36,10 @@ export class BoardsService {
     return updatedBoard;
   }
 
-  async deleteBoard(id: string): Promise<void> {
+  async delete(id: string): Promise<void> {
     const result = await this.boardRepository.delete(id);
     if (result.affected === 0) {
-      throw new CustomError(
-        StatusCodes.NOT_FOUND,
-        `Board with id ${id} not found`
-      );
+      throw new NotFoundException(`Board with id ${id} not found`);
     }
   }
 }
