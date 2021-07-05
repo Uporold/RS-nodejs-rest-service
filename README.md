@@ -63,16 +63,22 @@ After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
 For more information about OpenAPI/Swagger please visit https://swagger.io/.
 
-### Jsdoc
+### Express vs Fastify benchmark
 
-To generate jsdoc tutorial:
+Scenarios Created 10
 
-```
-npm run doc
-```
+Scenarios Completed 10
 
-Then open index.html by browser in /docs folder
+Total Requests Completed 30
 
+
+|                            | Express        |     Fastify    |
+|----------------------------|:--------------:|:--------------:|
+| Shortest call              | 2 ms           | 2ms            |
+| Longest call               | 200 ms         | 179 ms         |
+| Requests per second        | 3.16 rps       | 3.15 rps       |
+| Median response time       | 64.5 ms        | 64 ms          |
+| Status codes [codes:count] | 200:10, 201:20 | 200:10, 201:20 |
 ## Testing
 
 After application running open new terminal and enter:

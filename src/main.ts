@@ -31,6 +31,7 @@ async function bootstrap() {
 
   const document = YAML.load(path.join(__dirname, '../doc/api.yaml'));
   SwaggerModule.setup('doc', app, document);
+
   app.useGlobalFilters(new AllExceptionsFilter());
 
   app.useGlobalPipes(
@@ -45,7 +46,7 @@ async function bootstrap() {
       },
     })
   );
-  //app.useGlobalPipes(new ValidationPipe());
+
   config.USE_FASTIFY === 'true'
     ? await app.listen(config.PORT, '0.0.0.0', () => {
         logger.debug(`Started by fastify on ${config.PORT} port`);
@@ -53,20 +54,8 @@ async function bootstrap() {
     : await app.listen(config.PORT, () => {
         logger.debug(`Started by express on ${config.PORT} port`);
       });
-
-  // if (config.USE_FASTIFY) {
-  //   await app.listen(config.PORT, '0.0.0.0', () => {
-  //     logger.debug(`Started by fastify on ${config.PORT} port`);
-  //   });
-  // } else {
-  //   await app.listen(config.PORT, () => {
-  //     logger.debug(`Started by express on ${config.PORT} port`);
-  //   });
-  // }
 }
-// process.on('uncaughtException', (error) => {
-//   logger.error('uncaught exception', error);
-// });
+
 uncaughtExceptionHandler();
 bootstrap();
 unhandledRejectionHandler();
