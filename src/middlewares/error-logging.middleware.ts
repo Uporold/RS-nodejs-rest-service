@@ -7,7 +7,6 @@ import {
   ExceptionFilter,
 } from '@nestjs/common';
 import { logger } from '../common/logger';
-// import { BaseExceptionFilter } from '@nestjs/core';
 
 export class ValidationException extends BadRequestException {
   constructor(public validationErrors: string[]) {
@@ -22,10 +21,13 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const response = ctx.getResponse();
 
     if (exception instanceof ValidationException) {
-      return response.status(HttpStatus.BAD_REQUEST).json({
+      const body = {
         statusCode: HttpStatus.BAD_REQUEST,
         validationErrors: exception.validationErrors,
-      });
+      };
+      return process.env['USE_FASTIFY'] === 'true'
+        ? response.code(HttpStatus.BAD_REQUEST).send(body)
+        : response.status(HttpStatus.BAD_REQUEST).json(body);
     }
 
     const status =
@@ -35,52 +37,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     logger.error(exception.stack);
 
-    response.status(status).json({
+    const body = {
       statusCode: status,
       message: exception.message || 'Internal server error',
-    });
+    };
+    process.env['USE_FASTIFY'] === 'true'
+      ? response.code(status).send(body)
+      : response.status(status).json(body);
   }
 }
-
-// import {
-//   Catch,
-//   ArgumentsHost,
-//   HttpException,
-//   HttpStatus,
-//   BadRequestException,
-// } from '@nestjs/common';
-// import { logger } from '../common/logger';
-// import { BaseExceptionFilter } from '@nestjs/core';
-//
-// export class ValidationException extends BadRequestException {
-//   constructor(public validationErrors: string[]) {
-//     super();
-//   }
-// }
-//
-// @Catch()
-// export class AllExceptionsFilter extends BaseExceptionFilter {
-//   catch(exception: Error, host: ArgumentsHost) {
-//     const ctx = host.switchToHttp();
-//     const response = ctx.getResponse();
-//
-//     if (exception instanceof ValidationException) {
-//       return response.status(HttpStatus.BAD_REQUEST).json({
-//         statusCode: HttpStatus.BAD_REQUEST,
-//         validationErrors: exception.validationErrors,
-//       });
-//     }
-//
-//     const status =
-//       exception instanceof HttpException
-//         ? exception.getStatus()
-//         : HttpStatus.INTERNAL_SERVER_ERROR;
-//
-//     logger.error(exception.stack);
-//
-//     response.status(status).json({
-//       statusCode: status,
-//       message: exception.message || 'Internal server error',
-//     });
-//   }
-// }
