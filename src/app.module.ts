@@ -4,7 +4,7 @@ import { UsersModule } from './resources/users/users.module';
 import { BoardsModule } from './resources/boards/boards.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { options } from './typeorm.config';
+import options from './typeorm.config';
 import { loggingMiddleware } from './middlewares/http-logging.middleware';
 import { AuthModule } from './resources/auth/auth.module';
 

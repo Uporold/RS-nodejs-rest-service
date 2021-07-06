@@ -1,7 +1,7 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { config } from './common/config';
 
-export const options: TypeOrmModuleOptions = {
+const options: TypeOrmModuleOptions = {
   type: 'postgres',
   host: config.POSTGRES_HOST,
   port: config.POSTGRES_PORT,
@@ -16,3 +16,5 @@ export const options: TypeOrmModuleOptions = {
     migrationsDir: 'src/migrations',
   },
 };
+
+export = options;
