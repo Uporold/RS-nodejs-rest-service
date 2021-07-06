@@ -44,7 +44,7 @@ revert: ```npm run typeorm:cli -- migration:revert```
 ## Running application in development mode
 
 ```
-npm run start
+npm run start:dev
 ```
 
 ## Running application in production mode

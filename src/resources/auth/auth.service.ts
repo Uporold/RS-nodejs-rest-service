@@ -2,9 +2,6 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { UserRepository } from '../users/user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthCredentialsDto } from './auth.dto';
-// import { InjectRepository } from '@nestjs/typeorm';
-// import { UserRepository } from '../users/user.repository';
-// import { AuthCredentialsDto } from './auth.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 
