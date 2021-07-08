@@ -5,11 +5,8 @@ import * as path from 'path';
 import * as YAML from 'yamljs';
 import { SwaggerModule } from '@nestjs/swagger';
 import { logger } from './common/logger';
-import { ValidationError, ValidationPipe } from '@nestjs/common';
-import {
-  AllExceptionsFilter,
-  ValidationException,
-} from './middlewares/error-logging.middleware';
+import { ValidationPipe } from '@nestjs/common';
+import { AllExceptionsFilter } from './filters/all-exceptions.filter';
 import {
   FastifyAdapter,
   NestFastifyApplication,
@@ -18,9 +15,10 @@ import {
   uncaughtExceptionHandler,
   unhandledRejectionHandler,
 } from './common/processOnErrorHandlers';
+import { HttpLoggingInterceptor } from './interceptors/http-logging.interceptor';
+import { ValidationException } from './common/validation-exception';
 
 async function bootstrap() {
-  console.log(config.USE_FASTIFY);
   const app =
     config.USE_FASTIFY === 'true'
       ? await NestFactory.create<NestFastifyApplication>(
@@ -36,16 +34,13 @@ async function bootstrap() {
 
   app.useGlobalPipes(
     new ValidationPipe({
-      exceptionFactory: (errors: ValidationError[]) => {
-        const message = errors.map((error) => {
-          return `${error.property} has wrong value ${error.value}, ${
-            error.constraints ? Object.values(error.constraints) : ''
-          }`;
-        });
-        return new ValidationException(message);
+      exceptionFactory: (errors) => {
+        return new ValidationException(errors);
       },
     })
   );
+
+  app.useGlobalInterceptors(new HttpLoggingInterceptor());
 
   config.USE_FASTIFY === 'true'
     ? await app.listen(config.PORT, '0.0.0.0', () => {

@@ -21,6 +21,9 @@ const stream: StreamOptions = {
   write: (message) => logger.http(message),
 };
 
-export const loggingMiddleware = morgan(':method :url :status :query :body', {
-  stream,
-});
+export const httpLoggingMiddleware = morgan(
+  ':method :url :status :query :body',
+  {
+    stream,
+  }
+);

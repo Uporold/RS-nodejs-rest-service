@@ -3,16 +3,10 @@ import {
   ArgumentsHost,
   HttpException,
   HttpStatus,
-  BadRequestException,
   ExceptionFilter,
 } from '@nestjs/common';
 import { logger } from '../common/logger';
-
-export class ValidationException extends BadRequestException {
-  constructor(public validationErrors: string[]) {
-    super();
-  }
-}
+import { ValidationException } from '../common/validation-exception';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -23,7 +17,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     if (exception instanceof ValidationException) {
       const body = {
         statusCode: HttpStatus.BAD_REQUEST,
-        validationErrors: exception.validationErrors,
+        validationErrors: exception.getMessage().split('\n'),
       };
       return process.env['USE_FASTIFY'] === 'true'
         ? response.code(HttpStatus.BAD_REQUEST).send(body)

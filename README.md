@@ -65,20 +65,21 @@ For more information about OpenAPI/Swagger please visit https://swagger.io/.
 
 ### Express vs Fastify benchmark
 
-Scenarios Created 10
+Scenarios Created 600
 
-Scenarios Completed 10
+Scenarios Completed 600
 
-Total Requests Completed 30
+Total Requests Completed 3000
 
 
-|                            | Express        |     Fastify    |
-|----------------------------|:--------------:|:--------------:|
-| Shortest call              | 2 ms           | 2ms            |
-| Longest call               | 200 ms         | 179 ms         |
-| Requests per second        | 3.16 rps       | 3.15 rps       |
-| Median response time       | 64.5 ms        | 64 ms          |
-| Status codes [codes:count] | 200:10, 201:20 | 200:10, 201:20 |
+|                            | Express            |     Fastify        |
+|----------------------------|:------------------:|:------------------:|
+| Shortest call              | 1 ms               | 0ms                |
+| Longest call               | 224 ms             | 169 ms             |
+| Requests per second        | 49.66 rps          | 49.65 rps          |
+| Median response time       | 63 ms              | 63 ms              |
+| Status codes [codes:count] | 200:1800, 201:1200 | 200:1800, 201:1200 |
+
 ## Testing
 
 After application running open new terminal and enter:

@@ -2,8 +2,8 @@
 config:
   target: "http://localhost:4000"
   phases:
-    - duration: 10
-      arrivalRate: 1
+    - duration: 60
+      arrivalRate: 10
 scenarios:
   - flow:
       - post:
@@ -19,10 +19,25 @@ scenarios:
             authorization: 'Bearer {{token}}'
           url: '/users'
           json:
-            login: "testing{{ $randomString(8) }}"
+            login: "testing{{ $randomString(10) }}"
             name: "testing"
             password: "123456"
+          capture:
+            json: '$.id'
+            as: 'id'
       - get:
           headers:
             authorization: 'Bearer {{token}}'
           url: '/users'
+      - put:
+          headers:
+            authorization: 'Bearer {{token}}'
+          url: '/users/{{ id }}'
+          json:
+            login: "testing{{ $randomString(10) }}"
+            name: "testing"
+            password: "123456"
+      - delete:
+          headers:
+            authorization: 'Bearer {{token}}'
+          url: '/users/{{ id }}'
