@@ -74,7 +74,7 @@ Total Requests Completed 3000
 
 |                            | Express            |     Fastify        |
 |----------------------------|:------------------:|:------------------:|
-| Shortest call              | 1 ms               | 0ms                |
+| Shortest call              | 1 ms               | 0 ms               |
 | Longest call               | 224 ms             | 169 ms             |
 | Requests per second        | 49.66 rps          | 49.65 rps          |
 | Median response time       | 63 ms              | 63 ms              |
