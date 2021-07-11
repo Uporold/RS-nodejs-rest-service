@@ -1,9 +1,9 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../users/user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AuthCredentialsDto } from './auth.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { UserEntity } from '../users/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -13,16 +13,20 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
 
-  async login(
-    authCredentialsDto: AuthCredentialsDto
-  ): Promise<{ token: string }> {
-    const { login, password } = authCredentialsDto;
+  async login(user: UserEntity): Promise<{ token: string }> {
+    const payload = { userId: user.id, login: user.login };
+    const token = await this.jwtService.signAsync(payload);
+    return { token };
+  }
+
+  async validateUser(
+    login: string,
+    password: string
+  ): Promise<UserEntity | null> {
     const user = await this.userRepository.findOne({ login });
     if (user && (await bcrypt.compare(password, user.password))) {
-      const payload = { userId: user.id, login };
-      const token = await this.jwtService.signAsync(payload);
-      return { token };
+      return user;
     }
-    throw new ForbiddenException('Check your login credentials');
+    return null;
   }
 }

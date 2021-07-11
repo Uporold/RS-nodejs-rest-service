@@ -11,7 +11,7 @@ import {
 import { UsersService } from './users.service';
 import { UserEntity } from './user.entity';
 import { UserDto } from './user.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth-guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)

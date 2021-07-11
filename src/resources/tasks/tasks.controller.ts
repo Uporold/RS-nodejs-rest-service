@@ -12,7 +12,7 @@ import { TasksService } from './tasks.service';
 import { TaskEntity } from './task.entity';
 import { GetBoardId } from './get-board-id.decorator';
 import { TaskDto } from './task.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth-guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('boards/:boardId/tasks')
 @UseGuards(JwtAuthGuard)

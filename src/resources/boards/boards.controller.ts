@@ -11,7 +11,7 @@ import {
 import { BoardsService } from './boards.service';
 import { BoardEntity } from './board.entity';
 import { BoardDto } from './board.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth-guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('boards')
 @UseGuards(JwtAuthGuard)
