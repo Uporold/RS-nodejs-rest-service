@@ -44,7 +44,7 @@ revert: ```npm run typeorm:cli -- migration:revert```
 ## Running application in development mode
 
 ```
-npm run start
+npm run start:dev
 ```
 
 ## Running application in production mode
@@ -63,15 +63,22 @@ After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
 For more information about OpenAPI/Swagger please visit https://swagger.io/.
 
-### Jsdoc
+### Express vs Fastify benchmark
 
-To generate jsdoc tutorial:
+Scenarios Created 600
 
-```
-npm run doc
-```
+Scenarios Completed 600
 
-Then open index.html by browser in /docs folder
+Total Requests Completed 3000
+
+
+|                            | Express            |     Fastify        |
+|----------------------------|:------------------:|:------------------:|
+| Shortest call              | 1 ms               | 0 ms               |
+| Longest call               | 224 ms             | 169 ms             |
+| Requests per second        | 49.66 rps          | 49.65 rps          |
+| Median response time       | 63 ms              | 63 ms              |
+| Status codes [codes:count] | 200:1800, 201:1200 | 200:1800, 201:1200 |
 
 ## Testing
 

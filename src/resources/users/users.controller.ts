@@ -1,51 +1,48 @@
-import { Response, Request } from 'express';
-import { StatusCodes } from 'http-status-codes';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
-import { Message } from '../../common/const';
+import { UserEntity } from './user.entity';
 import { UserDto } from './user.dto';
-import { Controller } from '../../common/controller';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
-export class UsersController extends Controller {
-  private userService: UsersService;
+@Controller('users')
+@UseGuards(JwtAuthGuard)
+export class UsersController {
+  constructor(private usersService: UsersService) {}
 
-  constructor() {
-    super();
-    this.userService = new UsersService();
-    super.routes();
+  @Get()
+  getUsers(): Promise<UserEntity[]> {
+    return this.usersService.getAll();
   }
 
-  getAll = async (_req: Request, res: Response): Promise<void> => {
-    const users = await this.userService.getAll();
-    res.status(StatusCodes.OK).json(users);
-  };
+  @Post()
+  createUser(@Body() userDto: UserDto): Promise<UserEntity> {
+    return this.usersService.create(userDto);
+  }
 
-  create = async (req: Request, res: Response): Promise<void> => {
-    const userDto: UserDto = req.body;
-    const user = await this.userService.create(userDto);
-    res.status(StatusCodes.CREATED).send(user.toJSON());
-  };
+  @Get('/:id')
+  getUserById(@Param('id') id: string): Promise<UserEntity> {
+    return this.usersService.getById(id);
+  }
 
-  getById = async (req: Request, res: Response): Promise<void> => {
-    const { id } = req.params;
-    const user = await this.userService.getById(String(id));
-    res.status(StatusCodes.OK).json(user);
-  };
+  @Put('/:id')
+  updateUser(
+    @Body() userDto: UserDto,
+    @Param('id') id: string
+  ): Promise<UserEntity> {
+    return this.usersService.update(id, userDto);
+  }
 
-  update = async (req: Request, res: Response): Promise<void> => {
-    const { id } = req.params;
-    const userDto = req.body;
-
-    const user = await this.userService.update(String(id), userDto);
-    res.status(StatusCodes.OK).json(user);
-  };
-
-  delete = async (req: Request, res: Response): Promise<void> => {
-    const { id } = req.params;
-    await this.userService.deleteUser(String(id));
-    res.status(StatusCodes.OK).json({
-      status: 'success',
-      statusCode: res.statusCode,
-      message: Message.USER.DELETED,
-    });
-  };
+  @Delete('/:id')
+  deleteUser(@Param('id') id: string): Promise<void> {
+    return this.usersService.delete(id);
+  }
 }

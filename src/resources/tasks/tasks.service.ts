@@ -1,15 +1,15 @@
-import { StatusCodes } from 'http-status-codes';
-import { getConnection } from 'typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { TaskRepository } from './task.repository';
-import { CustomError } from '../../middlewares/error';
-import { TaskDto } from './task.dto';
+import { InjectRepository } from '@nestjs/typeorm';
 import { TaskEntity } from './task.entity';
+import { TaskDto } from './task.dto';
 
+@Injectable()
 export class TasksService {
-  private taskRepository: TaskRepository;
-  constructor() {
-    this.taskRepository = getConnection().getCustomRepository(TaskRepository);
-  }
+  constructor(
+    @InjectRepository(TaskRepository)
+    private taskRepository: TaskRepository
+  ) {}
 
   async getAll(boardId: string): Promise<TaskEntity[]> {
     return this.taskRepository.find({ where: { boardId } });
@@ -24,8 +24,7 @@ export class TasksService {
   async getById(id: string, boardId: string): Promise<TaskEntity> {
     const task = await this.taskRepository.findOne({ where: { id, boardId } });
     if (!task) {
-      throw new CustomError(
-        StatusCodes.NOT_FOUND,
+      throw new NotFoundException(
         `Task with id ${id} not found in board with id ${boardId}`
       );
     }
@@ -46,8 +45,7 @@ export class TasksService {
   async delete(id: string, boardId: string): Promise<void> {
     const result = await this.taskRepository.delete({ id });
     if (result.affected === 0) {
-      throw new CustomError(
-        StatusCodes.NOT_FOUND,
+      throw new NotFoundException(
         `Task with id ${id} not found in board with id ${boardId}`
       );
     }

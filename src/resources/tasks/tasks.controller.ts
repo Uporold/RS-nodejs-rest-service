@@ -1,55 +1,59 @@
-import { Response, Request } from 'express';
-import { StatusCodes } from 'http-status-codes';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { TasksService } from './tasks.service';
-import { Message } from '../../common/const';
-import { Controller } from '../../common/controller';
+import { TaskEntity } from './task.entity';
+import { GetBoardId } from './get-board-id.decorator';
+import { TaskDto } from './task.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
-export class TasksController extends Controller {
-  private tasksService: TasksService;
+@Controller('boards/:boardId/tasks')
+@UseGuards(JwtAuthGuard)
+export class TasksController {
+  constructor(private tasksService: TasksService) {}
 
-  constructor() {
-    super({ mergeParams: true });
-    this.tasksService = new TasksService();
-    super.routes();
+  @Get()
+  getTasks(@GetBoardId() boardId: string): Promise<TaskEntity[]> {
+    return this.tasksService.getAll(boardId);
   }
 
-  getAll = async (req: Request, res: Response): Promise<void> => {
-    const { boardId } = req.params;
-    const tasks = await this.tasksService.getAll(String(boardId));
-    res.status(StatusCodes.OK).json(tasks);
-  };
+  @Post()
+  createTask(
+    @Body() taskDto: TaskDto,
+    @GetBoardId() boardId: string
+  ): Promise<TaskEntity> {
+    return this.tasksService.create(boardId, taskDto);
+  }
 
-  create = async (req: Request, res: Response): Promise<void> => {
-    const { boardId } = req.params;
-    const taskDto = req.body;
-    const tasks = await this.tasksService.create(String(boardId), taskDto);
-    res.status(StatusCodes.CREATED).json(tasks);
-  };
+  @Get('/:id')
+  getTaskById(
+    @Param('id') id: string,
+    @GetBoardId() boardId: string
+  ): Promise<TaskEntity> {
+    return this.tasksService.getById(id, boardId);
+  }
 
-  getById = async (req: Request, res: Response): Promise<void> => {
-    const { id, boardId } = req.params;
-    const task = await this.tasksService.getById(String(id), String(boardId));
-    res.status(StatusCodes.OK).json(task);
-  };
+  @Put('/:id')
+  updateTask(
+    @Body() taskDto: TaskDto,
+    @Param('id') id: string,
+    @GetBoardId() boardId: string
+  ): Promise<TaskEntity> {
+    return this.tasksService.update(id, boardId, taskDto);
+  }
 
-  update = async (req: Request, res: Response): Promise<void> => {
-    const { id, boardId } = req.params;
-    const taskDto = req.body;
-    const task = await this.tasksService.update(
-      String(id),
-      String(boardId),
-      taskDto
-    );
-    res.status(StatusCodes.OK).json(task);
-  };
-
-  delete = async (req: Request, res: Response): Promise<void> => {
-    const { id, boardId } = req.params;
-    await this.tasksService.delete(String(id), String(boardId));
-    res.status(StatusCodes.OK).json({
-      status: 'success',
-      statusCode: res.statusCode,
-      message: Message.TASK.DELETED,
-    });
-  };
+  @Delete('/:id')
+  deleteTask(
+    @Param('id') id: string,
+    @GetBoardId() boardId: string
+  ): Promise<void> {
+    return this.tasksService.delete(id, boardId);
+  }
 }

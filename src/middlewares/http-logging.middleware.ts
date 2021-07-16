@@ -9,7 +9,9 @@ morgan.token('query', (req: Request) => {
 });
 
 morgan.token('body', (req: Request) => {
-  delete req.body.password;
+  if (req.body && req.body.password) {
+    delete req.body.password;
+  }
   return JSON.stringify({
     body: req.body,
   });
@@ -19,6 +21,9 @@ const stream: StreamOptions = {
   write: (message) => logger.http(message),
 };
 
-export const loggingMiddleware = morgan(':method :url :status :query :body', {
-  stream,
-});
+export const httpLoggingMiddleware = morgan(
+  ':method :url :status :query :body',
+  {
+    stream,
+  }
+);

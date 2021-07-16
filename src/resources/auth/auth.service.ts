@@ -1,34 +1,32 @@
-import { StatusCodes } from 'http-status-codes';
-import { getConnection } from 'typeorm';
-import * as bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../users/user.repository';
-import { CustomError } from '../../middlewares/error';
-import { AuthCredentialsDto } from './auth.dto';
-import { config } from '../../common/config';
+import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { UserEntity } from '../users/user.entity';
 
+@Injectable()
 export class AuthService {
-  private userRepository: UserRepository;
+  constructor(
+    @InjectRepository(UserRepository)
+    private userRepository: UserRepository,
+    private jwtService: JwtService
+  ) {}
 
-  constructor() {
-    this.userRepository = getConnection().getCustomRepository(UserRepository);
+  async login(user: UserEntity): Promise<{ token: string }> {
+    const payload = { userId: user.id, login: user.login };
+    const token = await this.jwtService.signAsync(payload);
+    return { token };
   }
 
-  async login(
-    authCredentialsDto: AuthCredentialsDto
-  ): Promise<{ token: string }> {
-    const { login, password } = authCredentialsDto;
+  async validateUser(
+    login: string,
+    password: string
+  ): Promise<UserEntity | null> {
     const user = await this.userRepository.findOne({ login });
     if (user && (await bcrypt.compare(password, user.password))) {
-      const payload = { userId: user.id, login };
-      const token = jwt.sign(payload, config.JWT_SECRET_KEY, {
-        expiresIn: 3600,
-      });
-      return { token };
+      return user;
     }
-    throw new CustomError(
-      StatusCodes.FORBIDDEN,
-      'Check your login credentials'
-    );
+    return null;
   }
 }
